@@ -1,0 +1,23 @@
+{
+  "name": "bookshelfapp_api",
+  "version": "1.0.0",
+  "description": "API untuk aplikasi bookshelf app",
+  "main": "server.js",
+  "scripts": {
+    "start-dev": "nodemon ./src/server.js",
+    "lint": "eslint ./",
+    "fix": "eslint ./ --fix"
+  },
+  "author": "febrianto",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.0",
+    "nanoid": "^3.1.28"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.24.2",
+    "nodemon": "^2.0.13"
+  }
+}

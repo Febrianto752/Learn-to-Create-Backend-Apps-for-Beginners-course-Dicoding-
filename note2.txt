@@ -1,0 +1,199 @@
+# Mengonsumsi dan menguji RESTful API Menggunakan Postman #ff0000
+
+## Postman 
+! Postman merupakan tools yang sangat cocok untuk menguji sebuah API karena memiliki fungsi yang relatif lengkap sebagai API caller dalam melakukan HTTP Request. Bahkan untuk pengembangan API yang sudah kompleks, pengujian Postman dapat diintegrasikan ke dalam alur CI/CD.
+
+
+## Menambah catatan baru dengan Postman
+// langkah - langkah 
+1. masukan url RESTful API, methode POST: localhost:5000/notes
+2. pilih menu body kemudian pilih radio-button raw dan ganti tipe dari text ke JSON dan isi textareany :
+    {
+        "title": "Catatan A",
+        "tags": ["Android", "Web"],
+        "body": "Isi dari catatan A"
+    }
+3. Kemudian klik send
+    -> nanti akan ada response sesuai code yg ditulis 
+        {
+            "status": "success",
+            "message": "Catatan berhasil ditambahkan",
+            "data": {
+                "noteId": "Q5f22S10Rrf95Yzd"
+            }
+        }
+
+## Mendapatkan Seluruh catatan yang disimpan
+1. masukan url dengan method get : localhost:5000/notes
+2. klik send 
+    -> nanti akan ada response 
+        {
+            "status": "success",
+            "data": {
+                "notes": [
+                    {
+                        "title": "Catatan A",
+                        "tags": [
+                            "Android",
+                            "Web"
+                        ],
+                        "body": "Isi dari catatan A",
+                        "id": "Q5f22S10Rrf95Yzd",
+                        "createdAt": "2021-09-29T10:07:29.923Z",
+                        "updatedAt": "2021-09-29T10:07:29.923Z"
+                    },
+                    {
+                        ....
+                    }
+                ]
+            }
+        }
+
+
+## Mendapatkan Catatan Secara Spesifik 
+1. masukan url dengan method get dan id yg tersedia : localhost:5000/notes/Q5f22S10Rrf95Yzd
+2. klik send 
+
+
+## Mengubah Catatan 
+1. masukan url RESTful API, methode PUT: localhost:5000/notes/Q5f22S10Rrf95Yzd
+2. pilih menu body kemudian pilih radio-button raw dan ganti tipe dari text ke JSON dan isi textareany :
+    {
+       "title": "Catatan A Revisi",
+       "tags": ["Android", "Web"],
+       "body": "Isi dari catatan A revisi"
+    }
+3. Kemudian klik send
+    -> nanti akan ada response : 
+    {
+        "status": "success",
+        "message": "Catatan berhasil diperbarui"
+    }
+
+## Menghapus Catatan 
+1. Masukan url RESTful API, method DELETE : localhost:5000/notes/Q5f22S10Rrf95Yzd
+2. klik send
+
+
+## Postman Collection 
+! Postman collection merupakan tempat menyimpan kumpulan request. Kita bisa menganggap collection adalah sebuah folder yang menyimpan berkas, namun berkas itu adalah request.
+
+! Setiap request yang Anda kirim di Postman sebenarnya akan tampak pada tab History di sidebar.
+
+! Melalui collection, Anda bisa menjalankan seluruh request yang ada di dalamnya sekaligus dengan urutan yang dapat Anda sesuaikan. #ffd900
+    ! yaitu dengan cara klik icon run
+
+
+## Postman Environment
+! Environment merupakan kumpulan dari variabel yang dapat digunakan pada request di Postman. Ketika melakukan pengujian otomatis, terkadang kita perlu menyimpan nilai pada sebuah variabel. Contohnya ketika melakukan request menambahkan catatan, kita akan mendapatkan id catatan tersebut dari server. Id tersebut perlu disimpan pada variabel agar dapat digunakan oleh request selanjutnya.
+
+! Variabel tak hanya digunakan untuk kasus tersebut saja, melainkan dapat juga untuk menyimpan nilai token, auth-key, atau nilai lainnya yang dipakai selama proses uji.
+! menu environment ada di sidebar
+
+! Untuk menggunakan variabel environment pada request, tuliskan nama variabel-nya yang dibungkus dengan kurung kurawal ganda seperti ini:
+    -  {{noteId}}
+    // contoh url : localhost:5000/notes/{{noteId}}
+
+
+## Skenario Pengujian Otomatis 
+! link Skenario : https://www.dicoding.com/academies/261/tutorials/14922?from=14917
+
+
+## Membuat Collection dan Evironment 
+! Sebelum membuat request dan mengujinya, kita siapkan dulu collection dan environment yang dibutuhkan. Tutup semua tab halaman permintaan karena kita akan mulai kembali dari awal.
+
+! Untuk membuat collection baru, silakan pilih tab Collection yang berada di samping kiri
+    -> Kemudian klik tombol “+” yang berada di samping kanannya.
+    -> nanti akan terbuat collection baru
+    -> rename dengan nama 'Note API Test'
+
+// Membuat environment
+1. Silakan pilih tab Environment pada sidebar.
+2. Klik Create a new Environment untuk membuat environment baru (icon plus).
+3. Ubah nama “New Environment” dengan “Notes API Test”, lalu tambahkan variabel baru bernama noteId. Biarkan initial value dan current value tetap kosong.
+4. Simpan perubahan dengan klik tombol Save.
+5. Selanjutnya, gunakan Note API Test sebagai environment aktif.
+
+
+## Skenario Adding Notes 
+
+1. tambahkan request pada collection 
+2. masukan url dengan method POST: localhost:5000/notes
+3. Lalu, tambahkan data catatan yang akan ditambahkan pada Body. Silakan klik tab Body, pilih opsi raw, kemudian ganti format text menjadi JSON, dan tuliskan struktur JSON berikut:
+    {
+       "title": "Catatan A",
+       "tags": ["Android", "Web"],
+       "body": "Isi dari catatan A"
+    } 
+
+4. tuliskan skenario testing untuk request ini terlebih dahulu. Silakan pilih tab Tests.
+    ! Mulai tuliskan skenario testing di sini.
+
+    ! Postman memiliki global object pm. Untuk membuat testing, gunakan method pm.test(). Method tersebut menerima dua parameter, yang pertama nama test dan yang kedua adalah spec function. Method test() mirip seperti method it() pada Jest
+
+    1. Buat testing baru dengan nama ‘response status code should have 201 values’.
+        pm.test('response status code should have 201 value', () => {
+            // Pastikan response status bernilai 201 dengan cara:
+            pm.response.to.have.status(201);
+        });
+
+        ! Bila nanti respons status tidak memiliki nilai 201, maka tesnya akan gagal
+
+    2. Buat test dengan nama ‘response Content-Type header should have application/json value’.
+        pm.test('response Content-Type header should have application/json value', () => {
+            // Kemudian uji nilai Content-Type pada response header dengan nilai application/json.
+            pm.expect(pm.response.headers.get('Content-Type')).to.equals('application/json; charset=utf-8');
+        }); 
+
+    3. Buat test dengan nama ‘response body should be an object’.
+        pm.test('response body should be an object', () => {
+            // Kemudian dapatkan nilai response body dalam bentuk JSON dengan cara:
+            const responseJson = pm.response.json();
+            // Selanjutnya uji responseJson bahwa ia harus merupakan sebuah objek. Caranya:
+            pm.expect(responseJson).to.be.an('object');
+        }); 
+
+    4. buat testing baru bernama ‘response body should have the correct property and value.’
+        pm.test('response body should have the correct property and value', () => {
+            // Dapatkan response body dalam bentuk JSON dan uji kesesuaian properti serta nilai atau tipe datanya.
+            const responseJson = pm.response.json();
+            pm.expect(responseJson).to.ownProperty('status');
+            pm.expect(responseJson.status).to.equals('success');
+            pm.expect(responseJson).to.ownProperty('message');
+            pm.expect(responseJson.message).to.equals('Catatan berhasil ditambahkan');
+            pm.expect(responseJson).to.ownProperty('data');
+            pm.expect(responseJson.data).to.be.an('object');
+        });
+
+    5. Buat test baru dengan nama ‘response body data should have noteId property and not equal to empty’.
+        pm.test('response body data should have noteId property and not equal to empty', () => {
+            // Di dalamnya, dapatkan nilai objek data dari response yang sudah diubah dengan bentuk JSON.
+            const responseJson = pm.response.json();
+            const { data } = responseJson;
+            
+            const responseJson = pm.response.json();
+            const { data } = responseJson;
+            
+            // Kemudian uji data bahwa ia harus memiliki properti noteId dan nilainya tidak kosong.
+            pm.expect(data).to.ownProperty('noteId');
+            pm.expect(data.noteId).to.not.equals('');
+
+            // Untuk menyimpan nilai pada variabel environment, kita bisa gunakan method pm.environment.set(). Method tersebut menerima dua parameter, yakni nama variabel dan nilai yang akan ditetapkan padanya.
+            pm.environment.set('noteId', data.noteId);
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

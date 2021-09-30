@@ -1,0 +1,14 @@
+{
+  "name": "hapi-web-server",
+  "version": "1.0.0",
+  "description": "rest API sederhana menggunakan Hapi Framework",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "febrianto",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.0"
+  }
+}

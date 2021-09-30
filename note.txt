@@ -1,0 +1,805 @@
+# Pengenalan Back-End #ff0000
+
+## Server 
+! Server merupakan sebuah sistem yang dapat menyediakan sumber daya berupa data, layanan, atau program untuk disajikan ke komputer lain.
+
+! Ingat! Pengertian dari server bukanlah sebuah perangkat keras ataupun komputer, namun server sendiri lebih merujuk kepada sistem yang dapat membuat perangkat (termasuk komputer) dapat melayani sebuah permintaan dari perangkat lain. Jika diterjemahkan ke dalam Bahasa Indonesia, server memang berarti penyaji, atau pelayan. 
+
+! Berikut beberapa tipe server sesuai dengan layanan yang baik untuk Anda ketahui.
+    - File Server : melayani penyimpanan dan pendistribusian berkas.
+    - Application Server : melayani hosting sebuah program atau aplikasi.
+    - DNS Server : mengubah nama domain (contoh: dicoding.com) ke dalam bentuk IP Address (contoh: 75.2.21.170).
+    - Web Server : melayani hosting sebuah program atau aplikasi (seperti Application Server) yang dapat diakses oleh client melalui internet maupun intranet.
+    - Database Server : melayani penyimpanan dan pendistribusian data terstruktur.
+
+  ! Sebenarnya masih banyak lagi tipe server yang tidak disebutkan, namun Anda tidak perlu mengetahui itu semua saat ini.
+
+## Web Server dan Web Service 
+! untuk membuat sistem aplikasi setidaknya membutuhkan:
+    - Web Server : Server yang dapat menjalankan program dan dapat diakses melalui internet atau intranet. 
+    - Web Service : Program yang dijalankan di web server agar kebutuhan bisnis terpenuhi.
+
+
+## Komunikasi Client-Server
+! HTTP/HTTPS merupakan salah satu protokol yang dapat digunakan untuk berinteraksi dengan web server. Protokol tersebut terkenal dengan pola request-response, artinya untuk mendapatkan sesuatu (response) kita perlu melakukan permintaan terlebih dahulu (request). 
+
+! Informasi pada request dapat mengandung :
+    - Request line : berisikan method/verb seperti GET (mengambil data), POST (menambahkan/mengirim data), PUT (memperbaharui data), atau DELETE (menghapus data); path atau alamat yang diminta; dan versi HTTP yang digunakan.
+    - Header : memuat informasi yang dilampirkan terkait request seperti format dokumen (contoh application/json, text/html, dsb), kunci akses, dsb.
+    - Body (opsional) : mengandung data yang dibutuhkan oleh server, bisa dalam bentuk teks, JSON, dll. Body tidak wajib dilampirkan bila server tidak membutuhkan data apapun.
+
+! Apabila informasi yang dilampirkan pada request tidak jelas/sesuai, maka server akan menolaknya dengan respons negatif. Respons negatif? Apa itu?
+
+! Setiap request yang dilakukan, baik dengan informasi yang sesuai ataupun tidak, akan mendapatkan respons. Respons atau tanggapan yang dikirimkan dari server untuk client juga mengandung informasi. Berikut beberapa informasi yang dilampirkan oleh respons
+    - Status line : berisikan HTTP versi yang digunakan; status code berupa tiga digit angka yang menandakan keberhasilan dari permintaan; reason phrase atau status text yang merupakan pesan berdasarkan status code dalam bentuk teks sehingga lebih mudah dimengerti.
+    - Header : mengandung informasi yang dilampirkan terkait response seperti format dokumen.
+    - Body (opsional, namun biasanya selalu dilampirkan) : memuat data yang dikirimkan oleh server. Data dapat berupa HTML, JSON, gambar, dsb.
+
+
+## Latihan Membuat Permintaan HTTP (HTTP Request)
+
+! cURL atau Client URL merupakan software berbasis command line yang dapat melakukan transaksi data melalui beberapa protokol internet, salah satunya HTTP/S. cURL dapat diakses secara langsung tanpa proses install melalui Terminal (Linux dan Mac) atau CMD (Windows).[4]
+
+! Kita akan melakukan tiga skenario berikut:
+    - Meminta daftar kopi tersedia.
+    - Membeli kopi yang tersedia.
+    - Membeli kopi yang tidak tersedia.
+
+1. Masuk ke skenario pertama, buatlah request untuk mendapatkan daftar kopi yang tersedia, tulislah kode berikut pada CMD atau Terminal Anda.
+    - curl -X GET https://coffee-api.dicoding.dev/coffees -i
+    ! Kita bedah kodenya yuk: 
+        - curl : merupakan perintah untuk menggunakan program cURL pada Terminal atau CMD.
+        - -X GET : menetapkan HTTP method/verb yang kita gunakan. GET berarti kita ingin mendapatkan sebuah data.
+        - https://coffee-api.dicoding.dev/coffees : merupakan alamat request yang dituju.
+        - -i : memberikan informasi detail terhadap response yang diberikan (HTTP response headers).
+    
+    ! Setelah menuliskan kode tersebut, tekan enter. Anda akan mendapatkan respons dari web server seperti ini:
+        HTTP/1.1 200 OK
+        Content-Type: application/json; charset=utf-8
+        Vary: Accept-Encoding
+        X-Powered-By: Express
+        Access-Control-Allow-Origin: *
+        ETag: W/"bc-+nGU6AB86aQxzJjdtoq2u1HQvyU"
+        X-Cloud-Trace-Context: 15ccf145d9c0d899c01b59c50e0f2e31;o=1
+        Date: Sun, 03 Jan 2021 00:41:28 GMT
+        Server: Google Frontend
+        Content-Length: 188
+        Alt-Svc: h3-29=":443"; ma=2592000,h3-T051=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
+        
+        {"message":"Berikut daftar kopi yang tersedia","coffees":[{"id":1,"name":"Kopi Tubruk","price":12000},{"id":2,"name":"Kopi Tarik","price":15000},{"id":3,"name":"Kopi Jawa","price":18000}]}
+
+    ! Mari kita bedah sekarang.
+        -  HTTP/1.1 : merupakan HTTP version yang digunakan oleh web server dalam menanggapi permintaan.
+        -  200 : merupakan status code dari request. Karena status code diawali dengan angka 2, berarti request kita berhasil dilakukan.
+        -  OK : merupakan pesan teks dari status code, 200 berarti “OK”.
+        -  Content-Type: application/json; : merupakan tipe konten yang digunakan web server dalam memberikan data. Karena nilainya application/json, itu berarti server menggunakan format json.
+        -  JSON Data (kode di bagian bawah) : merupakan data yang diberikan oleh web server. Kita bisa melihat web server memberikan informasi kopi yang tersedia beserta harganya menggunakan format JSON.
+
+2. Lanjut ke skenario kedua yuk. Buat permintaan membeli kopi yang tersedia dengan menuliskan perintah berikut:
+    - curl -X POST -H "Content-Type: application/json" -d "{\"name\": \"Kopi Tubruk\"}" https://coffee-api.dicoding.dev/transactions -i
+    
+    ! Mari kita bedah:
+        - -X POST : dalam request kali ini kita menggunakan method POST. Karena membeli bukan hanya meminta data, tapi akan mengubah jumlah stok kopi yang ada. Selain itu kita juga melampirkan data berupa kopi apa yang akan dipesan. Sehingga tidak masuk akal bila kita menggunakan GET request.
+        - -H “Content-Type: application/json” : Menetapkan nilai “Content-Type: application/json” pada Header request. Fungsinya untuk memberitahu server bahwa kita melampirkan data dalam bentuk JSON.
+        - -d <JSON Content> : merupakan data yang dilampirkan pada request. Data ini berformat JSON dan memiliki informasi kopi apa yang ingin dipesan.
+        - https://coffee-api.dicoding.dev/transactions : Merupakan alamat request yang dituju untuk membeli kopi.
+
+    ! Setelah menuliskan perintah di atas, silakan tekan enter. Anda akan mendapatkan respons seperti ini dari web server:
+        HTTP/1.1 200 OK
+        Content-Type: application/json; charset=utf-8
+        Vary: Accept-Encoding
+        X-Powered-By: Express
+        Access-Control-Allow-Origin: *
+        ETag: W/"2e-a65Yb2UyToE5h4vnZNUuPzDX90c"
+        X-Cloud-Trace-Context: 59cdf8e8238b684818cd4315bd9b7ef6;o=1
+        Date: Sun, 03 Jan 2021 02:45:21 GMT
+        Server: Google Frontend
+        Content-Length: 46
+        Alt-Svc: h3-29=":443"; ma=2592000,h3-T051=":443"; ma=2592000,h3-Q050=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443"; ma=2592000,quic=":443"; ma=2592000; v="46,43"
+        
+        {"message":"Pesanan berhasil!","success":true}
+
+3. Lanjut ke skenario terakhir, yakni membeli kopi yang tidak tersedia. Tuliskan perintah yang sama seperti sebelumnya. Namun dengan tipe kopi yang tentunya tidak tersedia pada daftar. Contohnya Kopi Luwak.
+    - curl -X POST -H "Content-Type: application/json" -d "{\"name\": \"Kopi Luwak\"}" https://coffee-api.dicoding.dev/transactions -i
+    // hasil response
+    ... 
+    {"message":"Pesanan gagal, kopi tidak ditemukan!","success":false}
+
+    ! kali ini Anda mendapatkan respons negatif lho! Request yang Anda lakukan tidak dapat diproses oleh server karena kopi luwak tidak ada (not found) pada daftar kopi
+
+
+## REST Web Service 
+
+! REST atau REpresentational State Transfer adalah salah satu gaya arsitektur yang dapat diadaptasi ketika membangun web service. Arsitektur ini sangat populer digunakan karena pengembangannya yang relatif mudah. REST menggunakan pola request-response dalam berinteraksi, artinya ia memanfaatkan protokol HTTP seperti yang sudah kita pelajari di materi sebelumnya. 
+
+## REST API 
+! Sebagian dari kalian mungkin mengenal REST dengan sebutan RESTful API. Yups, memang benar! RESTful merupakan sebutan untuk web services yang menerapkan arsitektur REST. REST juga merupakan API (application program interface) karena ia digunakan untuk menjembatani antara sistem yang berbeda (client dan server).
+
+! API atau Application Program Interface merupakan antarmuka yang menjadi perantara antara sistem aplikasi yang berbeda. API tak hanya dalam bentuk Web Service, bisa saja berupa SDK (Software Development Kit) ataupun lainnya.
+
+! Berikut beberapa sifat yang menjadi kunci pada REST API.
+    - Client-Server : Ini merupakan hal yang paling mendasar dalam membangun REST API. Server harus bisa merespons permintaan yang dilakukan client, baik itu respons berhasil ataupun gagal. Komunikasi client dan server dilakukan melalui protokol HTTP.
+    - Stateless : REST API tidak boleh menyimpan keadaan (state) apa pun terkait client. Seluruh state harus tetap disimpan di client. Artinya, tidak ada session di REST API. Permintaan yang dilakukan client harus mengandung informasi yang jelas. Jangan berharap RESTful API akan menyimpan informasi dari permintaan sebelumnya untuk digunakan di permintaan selanjutnya.
+    - Cacheable : Agar dapat merespons permintaan dengan cepat, sebaiknya REST API menerapkan prinsip cache. Sehingga setiap permintaan tidak melulu mengambil dari database.
+    - Layered : Ketika REST API server memiliki arsitektur yang kompleks, client seharusnya tidak perlu tahu bagaimana server melayaninya.
+
+! ketika membangun REST API kita harus memperhatikan empat poin berikut: #ffd900
+    - Format request dan response.
+    - HTTP Verbs/Methods.
+    - HTTP Response code.
+    - URL Design.
+
+
+## Format Request dan Response 
+! REST API seringnya menggunakan JavaScript Object Notation atau JSON sebagai format data baik itu pada request ataupun response
+
+! Agar REST API selalu merespons dengan format JSON, pastikan setiap respons terdapat properti Content-Type dengan nilai application/json.
+
+
+## HTTP Verbs/Methods 
+! Karena REST API menggunakan protokol HTTP, kita dapat memanfaatkan HTTP verbs untuk menentukan aksi.
+! GET untuk mendapatkan data, POST untuk mengirimkan data baru, PUT untuk memperbarui data yang ada, dan DELETE untuk menghapus data. Verbs tersebutlah yang umum digunakan dalam operasi CRUD.
+
+
+### HTTP Response Code 
+! Status-Line merupakan salah satu bagian dari HTTP Response. Di dalam status line terdapat response code yang mengindikasikan bahwa permintaan yang client lakukan berhasil atau tidak.
+
+! Status code bernilai 3 digit angka. Pada REST API, berikut nilai-nilai status code yang sering digunakan:
+    - 200 (OK) - Permintaan client berhasil dijalankan oleh server.
+    - 201 (Created) - Server berhasil membuat/menambahkan resource yang diminta client.
+    - 400 (Bad Request) - Permintaan client gagal dijalankan karena proses validasi input dari client gagal.
+    - 401 (Unauthorized) - Permintaan client gagal dijalankan. Biasanya ini disebabkan karena pengguna belum melakukan proses autentikasi.
+    - 403 (Forbidden) - Permintaan client gagal dijalankan karena ia tidak memiliki hak akses ke resource yang diminta.
+    - 404 (Not Found) - Permintaan client gagal dijalankan karena resource yang diminta tidak ditemukan.
+    - 500 (Internal Server Error) -  Permintaan client gagal dijalankan karena server mengalami eror (membangkitkan Exception).
+
+
+## URL Design 
+! URL, Path, atau Endpoint merupakan salah satu bagian terpenting yang harus diperhatikan ketika membangun REST API. Dengan merancang endpoint yang baik, penggunaan API akan lebih mudah dipahami. Dalam merancang endpoint, ikutilah aturan umum atau convention agar penggunaan API kita memiliki standar yang diharapkan oleh banyak developer.
+
+! Lalu, seperti apa standar dalam merancang endpoint? 
+    - Gunakan Kata Benda daripada Kata Kerja pada Endpoint Path
+        // contoh : Dengan adanya HTTP verbs Anda cukup memberikan endpoint GET /articles
+
+    - Gunakan Kata Jamak pada Endpoint untuk Resource Collection
+        // contoh : Jika ingin mengakses satu data saja Gunakan path parameter untuk mendapatkan data spesifik. Endpoint /articles/:id
+
+    - Gunakan Endpoint berantai untuk resource yang memiliki hirarki/relasi
+        ! Endpoint dari resource yang memiliki hirarki/relasi sebaiknya dituliskan secara berantai. Contohnya untuk mendapatkan daftar komentar dari sebuah artikel, endpoint GET /articles/:id/comments merupakan contoh yang tepat.
+
+
+# Dasar - Dasar Node.js untuk Back-End #ff0000
+! Node.js berhasil menjadi JavaScript Runtime yang dapat mengeksekusi kode JavaScript di luar browser.
+
+!! bisa liat di note nodeJS WPU
+
+
+## Events
+! Node.js menyediakan EventEmitter class yang merupakan member events core module
+
+// contoh : 
+    const { EventEmitter } = require('events');
+    const myEventEmitter = new EventEmitter();
+    const makeCoffee = ({ name }) => {
+        console.log(`Kopi ${name} telah dibuat!`);
+    };
+
+    myEventEmitter.on('coffee-order', makeCoffee);
+
+    // Memicu event 'coffee-order' terjadi.
+    myEventEmitter.emit('coffee-order', { name: 'Tubruk' });
+
+    /**
+    * output:
+    * Kopi Tubruk telah dibuat!
+    */ 
+
+    ! Fungsi emit() menerima nilai argumen sebanyak apa pun yang Anda mau, namun nilai yang pertama merupakan nama dari event yang akan dibangkitkan, argumen kedua dan seterusnya adalah nilai yang akan digunakan untuk menjadi dari parameter fungsi listener.
+
+    ! Anda juga bisa mendaftarkan lebih dari satu fungsi listener pada sebuah event menggunakan fungsi on.
+        // contoh : 
+            ... 
+            const makeBill = ({ price }) => {
+                console.log(`Bill sebesar ${price} telah dibuat!`);
+            }
+            myEventEmitter.on('coffee-order', makeCoffee);
+            myEventEmitter.on('coffee-order', makeBill);
+            myEventEmitter.emit('coffee-order', { name: 'Tubruk', price: 15000 });
+
+
+# Membangun Web Service Menggunakan Node.js ##ff0000
+
+## Membuat HTTP Server 
+
+// untuk membuat HTTP server yang merupakan instance dari http.server
+    - http.createServer();
+
+    // contoh : 
+        const http = require('http');
+
+        const server = http.createServer((request, response) => {
+        response.setHeader('content-Type', 'txt/html');
+
+        response.statusCode = 200;
+        response.end('<h1>Halo HTTP Server!</h1>');
+        })
+
+! Setiap instance dari http.server juga memiliki method listen(), Method inilah yang membuat http.server selalu standby untuk menangani permintaan yang masuk dari client. Setiap kali ada permintaan yang masuk, request listener akan tereksekusi.
+
+! Method listen() dapat menerima 4 parameter, berikut detailnya:
+    - port (number) : jalur yang digunakan untuk mengakses HTTP server.
+    - hostname (string) : nama domain yang digunakan oleh HTTP server.
+    - backlog (number) : maksimal koneksi yang dapat ditunda (pending) pada HTTP server.
+    - listeningListener (function) : callback yang akan terpanggil ketika HTTP server sedang bekerja (listening).
+
+! lazimnya, ketika memanggil method listen() kita memberikan nilai port, hostname, dan listeningListener.
+    // contoh : 
+        const port = 5000;
+        const host = 'localhost';
+        
+        server.listen(port, host, () => {
+            console.log(`Server berjalan pada http://${host}:${port}`);
+        });
+
+## Method/Verb Request
+
+// berisi method request yang dikirimkan client 
+    - request.method;
+
+    // contoh : 
+        const requestListener = (request, response) => {
+            const { method } = request; // output : 'GET|dll'(String)
+        };
+
+// contoh latihan : 
+    const http = require('http');
+
+    const server = http.createServer((request, response) => {
+    response.setHeader('content-Type', 'txt/html');
+    response.statusCode = 200;
+
+    const {
+        method
+    } = request;
+
+    if (method === 'GET') {
+        response.end('<h1>Response GET</h1>');
+    }
+    ....
+    if (method === 'DELETE') {
+        response.end('<h1>Response DELETE</h1>');
+    }
+    })
+
+    const port = 5000;
+    const host = 'localhost';
+
+    server.listen(port, host, () => {
+    console.log(`Server berjalan pada http://${host}:${port}`);
+    })
+
+    -> kemudian coba request client dengan cURL 
+        curl -X GET http://localhost:5000
+        // output: <h1>Response GET</h1>
+        curl -X POST http://localhost:5000
+        // output: <h1>Response POST</hai>
+        curl -X PUT http://localhost:5000
+        // output: <h1>Response PUT</h1>
+        curl -X DELETE http://localhost:5000
+        // output: <h1>Response DELETE</h1>
+
+! link request method : https://nodejs.org/api/http.html#http_class_http_clientrequest
+
+
+## Body Request 
+! Ketika client melakukan permintaan dengan method POST atau PUT, biasanya permintaan tersebut memiliki sebuah data yang disimpan pada body request. Data pada body bisa berupa format teks, JSON, berkas gambar, atau format lainnya. Data tersebut nantinya digunakan oleh server untuk diproses di database atau disimpan dalam bentuk objek utuh.
+
+
+// contoh latihan 
+    ...
+    if (method === 'POST') {
+    let body = [];
+
+    request.on('data', (chunk) => { // event client mengirimkan request data 
+      body.push(chunk);
+      /* chunk berisi data yang dikirimkan oleh client tetapi dalam bentuk buffer, contoh array yg berisi buffer: [
+        <Buffer 7b 22 6e 61 6d 65 22 3a 20 22 44 69 63 6f 64 69 6e 67 22 7d>
+      ]*/
+    })
+    // event end dibangkitkan jika data sudah siap
+    request.on('end', () => {
+      body = Buffer.concat(body).toString(); // output String : {"name": "Dicoding"}
+      // output Buffer.concat(body) = buffer : <Buffer 7b 22 6e 61 6d 65 22 3a 20 22 44 69 63 6f 64 69 6e 67 22 7d>
+      console.log(body);
+      const {
+        name
+      } = JSON.parse(body);
+      response.end(`<h1>Hai ${name}</h1>`);
+    })
+    ....
+
+    -> kemudian lakukan request client dengan cURL 
+        curl -X POST -H "Content-Type: application/json" http://localhost:5000 -d "{\"name\": \"Dicoding\"}"
+    
+        -> output : <h1>Hai, Dicoding!</h1>
+
+## Routing Request 
+
+// untuk mengambil url request 
+    - request.url 
+
+    // contoh : 
+        const requestListener = (request, response) => {
+            const { url } = request;
+        };
+
+    ! Contohnya, bila client meminta pada alamat http://localhost:5000/about atau http://localhost:5000/about/, maka url akan bernilai ‘/about’; bila meminta alamat http://localhost:5000 atau http://localhost:5000/, maka url akan bernilai ‘/’.
+
+
+## Response Status
+! link http status : https://developer.mozilla.org/en-US/docs/Web/HTTP/Status?retiredLocale=id
+! Indikasi keberhasilan request client ditentukan oleh response status code yang dikirim oleh server. Karena itu, tentu nilai status code tak bisa sembarang kita tetapkan. Status code haruslah bernilai 3 digit angka dengan ketentuan berikut:
+    - 100-199 : informational responses.
+    - 200 - 299 : successful responses.
+    - 300-399 : redirect.
+    - 400-499 : client error.
+    - 500-599 : server errors.
+
+! Pada Node.js, penetapan nilai status code pada response dilakukan melalui properti response.statusCode.
+! Status message memiliki nilai standar sesuai dengan response code. Namun, kita bisa mengubahnya bila diperlukan. Untuk mengubah status message, Anda bisa gunakan properti response.statusMessage.
+! Ketahuilah bahwa Anda sebaiknya tidak mengubah statusMessage dari nilai default bila tidak diperlukan. Walaupun hanya sekadar menerjemahkannya menjadi “Tidak ditemukan”.
+
+
+## Response Header 
+! link MIME Types/Content Type : https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Common_types
+
+! Jika Anda menetapkan header dengan properti yang tidak standar (lihat apa saja standard properti pada header : https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers) atau Anda buat nama propertinya secara mandiri, maka sangat disarankan untuk menambahkan huruf X di awal nama propertinya. 
+
+! Ketahuilah juga bahwa penulisan properti header dituliskan secara Proper Case atau setiap kata diawali dengan huruf kapital dan setiap katanya dipisahkan oleh tanda garis (-).
+
+// untuk set response header 
+    - const requestListener = (request, response) => {
+            response.setHeader('Content-Type','application/json');
+            response.setHeader('X-Powered-By', 'NodeJs'); // custom property response header
+        };
+
+
+## Response Body 
+! Walaupun kita bisa memberikan informasi apa pun, namun tidak semua informasi cocok disimpan di header. Informasi pada header hanya sebagai metadata atau informasi yang menjelaskan tentang sebuah data lain (data utama).
+
+! Selain header, HTTP respons juga membawa body (Anda mengetahui ini pada materi pola komunikasi client dan server). Di dalam body inilah data utama (atau bisa kita sebut konten) seharusnya disimpan.
+
+
+// contoh latihan mengubah nilai body: 
+    if (method === 'GET') {
+      response.statusCode = 200;
+      response.end(JSON.stringify({ // menaruh di response body
+        message: `Halo! ini adalah halaman about`
+      }));
+
+
+
+## Web Framework
+! Web Framework adalah sebuah kerangka yang dapat membantu mempermudah pengembangan web termasuk dalam membuat web server. Dengan menggunakan framework, penulisan kode akan lebih terstruktur, mudah dipelihara, dan gampang dikembangkan.  
+
+
+## Web Framework di Node.js 
+! disini kita akan menggunakan Framework Hapi (fungsinya seperti express)
+! link doc Hapi : https://hapi.dev/tutorials?lang=en_US
+
+
+## Membangun Web Server menggunakan Hapi 
+
+// contoh latihan : 
+    const Hapi = require('@hapi/hapi');
+
+    const init = async () => {
+    const server = Hapi.server({
+        port: 5000,
+        host: 'localhost',
+    });
+
+    await server.start();
+    console.log(`Server berjalan pada ${server.info.uri}`);
+    }
+
+    init();
+
+## Method/Verb Request dan Routing Hapi 
+
+// contoh penggunaan route dengan Hapi : 
+    // di routes.js
+    const routes = [{
+        method: 'GET',
+        path: '/',
+        handler: (request, h) => {
+        return 'Homepage';
+        }
+    },
+    {
+        method: '*',
+        path: '/',
+        handler: (request, h) => {
+        return `Halaman tidak dapat diakses dengan method tersebut`;
+        }
+    },
+    {
+        method: 'GET',
+        path: '/about',
+        handler: (request, h) => {
+        return 'About page';
+        }
+    },
+    {
+        method: '*',
+        path: '/about',
+        handler: (request, h) => {
+        return `Halaman tidak dapat diakses dengan method tersebut`
+        }
+    },
+    {
+        method: '*',
+        path: '/{any*}',
+        handler: (request, h) => {
+        return `Halaman tidak ditemukan`;
+        }
+    }
+    ];
+
+    module.exports = {
+        routes
+    };
+
+    ! Anda bisa lihat beberapa properti method memiliki nilai ‘*’, itu artinya route dapat diakses menggunakan seluruh method yang ada pada HTTP. 
+
+    ! Kemudian nilai ‘/{any*}’ pada route paling akhir, ini berfungsi untuk menangani permintaan masuk pada path yang belum Anda tentukan. Ini merupakan salah satu teknik dalam menetapkan routing yang dinamis menggunakan Hapi.
+
+    // di server.js 
+    ...
+    const {
+        routes
+    } = require('./routes');
+    ...
+    server.route(routes);
+    ...
+
+## Path Parameter 
+
+// untuk mengambil parameter yg dikirim di url 
+    - request.params;
+
+    // contoh : 
+        method: 'GET',
+        path: '/users/{username?}',
+        handler: (request, h) => {
+            const { username = 'stranger' } = request.params;    
+            return `Hello, ${username}!`;
+        },
+
+! pada Hapi Anda dapat membuat path parameter bersifat opsional. Caranya dengan menambahkan tanda “?” di akhir nama parameternya.
+
+
+## Query Parameters 
+! Selain path parameter, terdapat cara lain yang sering digunakan dalam mengirimkan data melalui URL, yakni dengan query parameter. Teknik ini umum digunakan pada permintaan yang membutuhkan kueri dari client, contohnya seperti pencarian dan filter data. 
+
+! Data yang dikirim melalui query memiliki format key=value. Contohnya: localhost:5000?name=harry&location=bali
+
+! Di Hapi, Anda bisa mendapatkan nilai dari query parameter melalui request.query.
+    - request.query;
+
+    // contoh : 
+        ...
+        method: 'GET',
+        path: '/hello/{name?}',
+        handler: (request, h) => {
+            const { name = "stranger" } = request.params;
+            const { lang } = request.query;
+ 
+        if(lang === 'id') {
+            return `Hai, ${name}!`;
+        }
+            return `Hello, ${name}!`;
+        ...
+
+
+## Body/Payload Request
+! Ketika menggunakan Node.js, untuk mendapatkan data pada body request--meskipun datanya hanya sebatas teks--kita harus berurusan dengan Readable Stream. Di mana untuk mendapatkan data melalui stream tak semudah seperti kita menginisialisasikan sebuah nilai pada variabel. 
+
+! Good News! Ketika menggunakan Hapi, Anda tidak lagi berurusan dengan stream untuk mendapatkan datanya. Di balik layar, Hapi secara default akan mengubah payload JSON menjadi objek JavaScript. Dengan begitu, Anda tak lagi berurusan dengan JSON.parse()!
+
+! Kapan pun client mengirimkan payload berupa JSON, payload tersebut dapat diakses pada route handler melalui properti request.payload. Contohnya seperti ini:
+    server.route({
+        method: 'POST',
+        path: '/login',
+        handler: (request, h) => {
+            const { username, password } = request.payload;
+            return `Welcome ${username}!`;
+        },
+    });
+
+    ! Pada contoh di atas, handler menerima payload melalui request.payload. Dalam kasus tersebut, client mengirimkan data login dengan struktur:
+        { "username": "harrypotter", "password": "encryptedpassword" }
+
+
+## Response Toolkit 
+! link explore fungsi dari parameter request : fungsi dari parameter request
+
+! Parameter yang kedua pada handler route yaitu h (huruf inisial Hapi). Parameter ini merupakan response toolkit di mana ia adalah objek yang menampung banyak sekali method yang digunakan untuk menanggapi sebuah permintaan client. Objek ini serupa dengan objek response pada request handler ketika kita menggunakan Node.js native.
+
+! Sebelumnya pada latihan coding dengan hapi status response selalu bernilai 200 OK, Ketika Anda butuh mengubah nilai status response, di situlah Anda membutuhkan parameter h pada handler route.
+    // contoh : 
+        server.route({
+            method: 'POST',
+            path: '/user',
+            handler: (request, h) => {
+                return h.response('created').code(201);
+            },
+        });
+! Fungsi handler harus selalu mengembalikan sebuah nilai, bila Anda menggunakan h ketika menangani permintaan, maka kembalikanlah dengan nilai h.response(). Anda bisa lihat contoh kode di atas. ##ffd900
+
+! Parameter h tidak hanya berfungsi untuk menetapkan status kode respons. Melalui h, Anda juga bisa menetapkan header response, content type, content length, dan masih banyak lagi. 
+
+! link explore response toolkit : https://hapi.dev/api?v=20.2.0#response-toolkit
+
+
+## Membangun RESTful API Menggunakan Hapi
+
+## Menyiapkan Proyek 
+
+### Nodemon 
+! Tools pertama adalah nodemon, ia bisa dikatakan wajib digunakan selama proses pengembangan. Pasalnya, dengan tools ini kita tak perlu menjalankan ulang server ketika terjadi perubahan pada berkas JavaScript. Nodemon akan mendeteksi perubahan kode JavaScript dan mengeksekusi ulang secara otomatis.
+
+! Untuk menggunakannya, pasanglah package nodemon pada devDependencies dengan mengeksekusi perintah berikut di Terminal proyek:
+    - npm install nodemon --save-dev
+
+
+## ESLint
+! Tools yang kedua adalah ESLint, ia dapat membantu atau membimbing Anda untuk selalu menuliskan kode JavaScript dengan gaya yang konsisten. Seperti yang Anda tahu, JavaScript tidak memiliki aturan yang baku untuk gaya penulisan kode
+
+! ESLint dapat mengevaluasi kode yang dituliskan berdasarkan aturan yang Anda terapkan. Anda bisa menuliskan aturannya secara mandiri atau menggunakan gaya penulisan yang sudah ada seperti AirBnb JavaScript Code Style, Google JavaScript Code Style, dan StandardJS Code Style. Kami sarankan Anda untuk mengikuti salah satu code style yang ada. Mengapa begitu? Jawabannya karena code style tersebut sudah banyak digunakan oleh JavaScript Developer di luar sana.
+
+// cara install ESLint 
+    - npm install eslint --save-dev
+
+    ! Sebelum digunakan, Anda perlu melakukan konfigurasi terlebih dahulu. Caranya dengan menggunakan perintah berikut di Terminal proyek.
+        - npx eslint --init
+
+    ! Kemudian Anda akan diberikan beberapa pertanyaan, silakan jawab pertanyaan yang ada dengan jawaban berikut:
+        - ow would you like to use ESLint? -> To check, find problems, and enforce code style.
+        - hat type of modules does your project use? -> CommonJS (require/exports).
+        - hich framework did you use? -> None of these. 
+        - oes your project use TypeScript? -> N.
+        - here does your code run? -> Node (pilih menggunakan spasi).
+        - ow would you like to define a style for your project? -> Use a popular style guide.
+        - Which style guide do you want to follow? -> (Anda bebas memilih, sebagai contoh pilih AirBnB).
+        - What format do you want your config file to be in? -> JSON.
+        - Would you like to …… (seluruh pertanyaan selanjutnya) -> Y.
+
+    ! Setelah menjawab seluruh pertanyaan yang diberikan, maka akan terbentuk berkas konfigurasi eslint dengan nama .eslintrc.json.
+        ! Di dalam berkas tersebut tertulis konfigurasi sesuai dengan jawaban pada pertanyaan-pertanyaan yang diberikan.
+
+    ! Setelah membuat konfigurasi ESLint, selanjutnya kita gunakan ESLint untuk memeriksa kode JavaScript yang ada pada proyek. Namun sebelum itu, kita perlu menambahkan npm runner berikut di dalam berkas package.json:
+        "scripts": {
+            "start": "nodemon server.js",
+            "lint": "eslint ./" // artinya eslint tolong cek smua file js yang ada
+        },
+
+! ESLint dapat diintegrasikan dengan berbagai text editor, termasuk VSCode. Untuk mengaktifkan integrasi, Anda bisa menggunakan ekstensi ESLint untuk Visual Studio Code. Bagaimana cara mengunduh dan memasangnya? Mudah saja, silakan pilih menu extensions.
+
+
+## Kriteria Proyek 
+! Dari segi Front-End (client), kami telah membuat aplikasi web-nya. Kami juga telah men-deploy aplikasi tersebut sehingga Anda dapat mengaksesnya melalui tautan ini: http://notesapp-v1.dicodingacademy.com/.
+    ! Namun ketika Anda mengaksesnya, aplikasi tersebut belum bisa digunakan.
+
+! percayalah, aplikasi tersebut akan berfungsi dengan baik ketika Anda sudah membuat RESTful API sesuai dengan kriteria yang dibutuhkan. Lantas apa saja kriterianya?
+
+! link kriteria-kriteria yang dibutuhkan : https://www.dicoding.com/academies/261/tutorials/14762?from=14757
+
+
+## Menyimpan Catatan 
+
+// pagkage nanoid, untuk membuat unique string ID generator for JavaScript.
+    ! link : https://github.com/ai/nanoid
+    - npm install nanoid
+
+    // cara penggunaan : 
+        const {nanoid} = require('nanoid');
+
+        // untuk membuat unik id 16 digit 
+        const id = nanoid(16);
+
+
+// untuk mengconvert dateISO ke strong
+    - const createdAt = new Date().toISOString(); // output : 2021-09-29T04:56:19.988Z
+
+// contoh latihan function addNotesHandler: 
+    ...
+    const isSuccess = notes.filter((note) => note.id === id).length > 0;
+
+    if (isSuccess) {
+    const response = h.response({
+        status: 'success',
+        message: 'Catatan berhasil ditambahkan',
+        data: {
+        noteId: id,
+        },
+    });
+        response.code(201);
+        return response;
+    }
+    ...
+
+
+! disini proyek terhalangi oleh same-origin policy 
+
+
+## Same-Origin Policy
+! Server dapat menampung sebuah website, aplikasi, gambar, video, dan masih banyak lagi. Ketika server menampung website, mungkin beberapa data gambar, video, stylesheet biasanya diambil dari alamat server lain atau origin yang berbeda. Contohnya stylesheet yang diambil dari Bootstrap CDN ataupun gambar yang diperoleh dari server Unsplash. Hal ini wajar dan biasa dilakukan.
+
+! Namun apakah Anda tahu bahwa tidak semua data bisa diambil dari origin yang berbeda? Contohnya data JSON yang didapatkan melalui teknik XMLHTTPRequest atau fetch. Jika website meminta sesuatu menggunakan teknik tersebut dari luar origin-nya, maka permintaan tersebut akan ditolak. Itu disebabkan oleh kebijakan same-origin. Kasus ini terjadi pada aplikasi client dan web server yang kita buat.
+
+! Origin terdiri dari tiga hal: protokol, host, dan port number. Origin dari aplikasi client kita adalah : http://notesapp-v1.dicodingacademy.com
+    ! Di mana protokolnya adalah http://, host-nya adalah notesapp-v1.dicodingacademy.com, dan port-nya adalah :80 (implisit).
+! Dengan begitu jelas yah, apa penyebab gagalnya aplikasi client ketika melakukan permintaan ke web server yang kita buat. Sudah jelas keduanya memiliki origin yang berbeda. Origin web server kita saat ini adalah http://localhost:5000/
+
+! Lalu, apa solusi agar keduanya dapat berinteraksi? Tenang, untungnya ada mekanisme yang dapat membuat mereka saling berinteraksi. Mekanisme tersebut disebut Cross-origin resource sharing (CORS).
+    ! Cukup mudah! Pada web server, kita hanya perlu memberikan nilai header ‘Access-Control-Allow-Origin’ dengan nilai origin luar yang akan mengkonsumsi datanya (aplikasi client).
+        // contoh : 
+            - response.header('Access-Control-Allow-Origin', 'http://notesapp-v1.dicodingacademy.com');
+    ! Atau Anda bisa menggunakan tanda * pada nilai origin untuk memperbolehkan data dikonsumsi oleh seluruh origin.
+
+    // contoh penerapan cors pada hapi : 
+        {
+        method: 'POST',
+        path: '/notes',
+        handler: addNoteHandler,
+        options: {
+            cors: {
+            origin: ['*'],
+            },
+          },
+        },
+
+! Bila ingin cakupannya lebih luas alias CORS diaktifkan di seluruh route yang ada di server, Anda bisa tetapkan CORS pada konfigurasi ketika hendak membuat server dengan menambahkan properti routes.cors. Contohnya seperti ini:
+    const server = Hapi.server({
+        port: 5000,
+        host: 'localhost',
+        routes: {
+            cors: {
+            origin: ['*'],
+            },
+        },
+    });
+!! ganti browser jika tidak bisa #ffd900
+
+## Mengubah catatan 
+
+// untuk menemukan index yang dicari
+    - myarr.findIndex((e)=>e == value);
+
+    // contoh : 
+        const ages = [3, 10, 18, 20];
+
+        ages.findIndex(checkAge) 
+
+        function checkAge(age) {
+        return age > 18; // output : 3
+        return age > 3; // output : 1
+        return age > 20; // output : -1 (false)
+
+        }
+
+// contoh memecah dengan spread operator dan jika nama property sama maka akan di overwrite :
+    notes[index] = {
+        ...notes[index],
+        title,
+        tags,
+        body,
+        updatedAt,
+    };
+
+
+# Deploy Web Services (AWS Cloud) #ff0000
+! Skip
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+!! NOTE !! #ff0000
+
+// cara pake eslint secara manual
+1. install package : npm install eslint --save-dev
+2. create configurasi files 
+    pilih salah satu 
+    - .eslintrc.js
+    - .eslintrc.yaml
+    - .eslintrc.json
+
+3. Set the Environment :
+    // di file .eslintrc.json
+    "env": {
+    "browser": true,
+    "node": true,
+    "es6": true
+  }
+
+4. Set the Rules 
+    // di file .eslintrc.json
+    "rules": {
+        "semi": ["error", "always"],
+        "quotes": ["error", "single"],
+        "indent": ["warn", 2]
+    }
+
+    ! cara baca rules contoh pada "semi" :
+        "always use semicolon and if not show error message"
+
+    format : 
+    {
+        "rules":{
+            "rule-name": [rule_id, format]
+        }
+    }
+
+    // penjelasan rule_id :
+        - 0 atau "off"
+        - 1 atau "warn"
+        - 2 atau "error"
+
+5. Set NPM Runner 
+    ! tambahkan script "lint" di package.json 
+        - "scripts": {
+            "start": "nodemon server.js",
+            "lint": "eslint ./"
+        },
+    
+// cara menggunakan eslint dengan mudah #ff0000
+1. Install eslint di global | di local
+    // ketik di cmd direktori 
+    - npm install eslint -g | npm install eslint --save-dev
+
+2. Initialization Configuration 
+    // ketik di cmd direktori
+    - eslint --init 
+        -> nanti akan muncul list pertanyaan 
+
+3. Set NPM Runner 
+    ! tambahkan script "lint" di package.json 
+        - "scripts": {
+            "start": "nodemon server.js",
+            "lint": "eslint ./"
+        },
+
+// Cara Quick Fix Feature ESLint 
+1. Set more NPM Runner 
+    - "scripts": {
+        "lint": "eslint ./",
+        "fix": "eslint ./ --fix"
+    },
+
+
+// Cara extension eslint di vsCode 
+1. Donwload extension di vsCode
+2. selesai 
+	-> nanti akan muncul warna jika tidak sesuai dengan eslint
+
+
+
+
+
