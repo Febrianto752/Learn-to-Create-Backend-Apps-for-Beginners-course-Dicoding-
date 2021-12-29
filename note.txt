@@ -769,7 +769,7 @@
             "lint": "eslint ./"
         },
     
-// cara menggunakan eslint dengan mudah #ff0000
+// cara menggunakan eslint dengan mudah #ffd900
 1. Install eslint di global | di local
     // ketik di cmd direktori 
     - npm install eslint -g | npm install eslint --save-dev
